@@ -4,7 +4,19 @@
 This project implements **both forward and backward chaining** using **MeTTa** for **medical diagnosis and treatment inference**. 
 
 - **Forward Chaining** starts with **known symptoms** and **infers possible diseases and treatments**.
-- **Backward Chaining** starts with a **goal (diagnosis or treatment)** and **works backward to verify conditions**.
+- **Backward Chaining** starts with a **goal (diagnosis or treatment)** and **works backward to verify conditions**
+
+### **Understanding Depth **
+Depth is controlled using `fromNumber`, which converts a number into **Peano notation**:
+```lisp
+(: fromNumber (-> Number Atom))
+(= (fromNumber $n) (if (<= $n 0) Z (S (fromNumber (- $n 1)))))
+```
+- `fromNumber(1)` → `S(Z)` → **One recursion step allowed**.
+- `fromNumber(2)` → `S(S(Z))` → **Two recursion steps allowed**.
+- `fromNumber(3)` → `S(S(S(Z)))` → **Three recursion steps allowed**.
+
+This ensures that inference does not continue indefinitely.
 
 ## How Forward Chaining Works
 1. **Starts from symptoms in the Knowledge Base (KB).**
@@ -24,9 +36,8 @@ This project implements **both forward and backward chaining** using **MeTTa** f
 
 **Final Output:**
 ```lisp
-[(Diagnosis John COVID-19)]
-[(Treatment John Quarantine)]
-```
+[(Evaluation Cough John), (Diagnosis John COVID-19)]
+[(Diagnosis John COVID-19), Quarantine]
 
 ## How Backward Chaining Works
 1. **Starts from the goal (e.g., `Diagnosis $X COVID-19`).**
